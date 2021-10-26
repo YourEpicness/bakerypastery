@@ -4,15 +4,18 @@
 @tailwind utilities;
 
 body {
-    @apply bg-mesh-bg bg-cover bg-no-repeat md:bg-auto h-full text-purple-900 font-sans;
+    @apply bg-mesh-bg bg-cover bg-no-repeat md:bg-auto h-full font-sans;
 }
 
 @layer components {
+    .header {
+        @apply flex text-center text-5xl font-bold mb-4 tracking-tight leading-none
+    }
     .border-normal {
         @apply border border-white border-solid rounded
     }
     .btn-hero {
-        @apply bg-black border-white border border-solid rounded text-white p-3 m-2 hover:filter-lighten
+        @apply bg-blue-800 rounded text-white p-3 mt-2 hover:filter-lighten
     }
    
 }
