@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Banner from "../components/banner";
+import Head from "next/head";
 
 const Home: NextPage = () => {
   const handleOnBannerClick = (): void => {
@@ -8,10 +9,12 @@ const Home: NextPage = () => {
 
   return (
     <div className="flex place-content-center h-screen">
+      <Head>
+        <title> Bakery Pastery</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
       <main className="flex flex-col justify-center items-center">
-        <h1 className="flex text-center text-5xl font-bold mb-4">
-          Bakery Pastery
-        </h1>
         <Banner
           buttonText="View bakeries nearby"
           handleOnClick={handleOnBannerClick}
