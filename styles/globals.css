@@ -2,3 +2,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    @apply bg-mesh-bg bg-cover bg-no-repeat md:bg-auto h-full text-purple-900 font-sans;
+}
