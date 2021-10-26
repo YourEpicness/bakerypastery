@@ -6,3 +6,19 @@
 body {
     @apply bg-mesh-bg bg-cover bg-no-repeat md:bg-auto h-full text-purple-900 font-sans;
 }
+
+@layer components {
+    .border-normal {
+        @apply border border-white border-solid rounded
+    }
+    .btn-hero {
+        @apply bg-black border-white border border-solid rounded text-white p-3 m-2 hover:filter-lighten
+    }
+   
+}
+
+@layer utilities{
+    .filter-lighten {
+        @apply filter brightness-125
+    }
+}
