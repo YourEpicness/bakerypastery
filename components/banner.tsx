@@ -9,13 +9,16 @@ type Props = {
 
 const Banner: NextPage<Props> = (props) => {
   return (
-    <div className="w-full text-white">
-      <h1 className="text-4xl font-bold w-full mb-5">
+    <div className="w-full text-white z-10">
+      <h1 className="text-4xl font-bold w-full mb-5 md:text-5xl">
         <span className="">Bakery</span>
         <span className="text-blue-800">Pastery</span>
       </h1>
-      <p className="text-lg mb-2"> Discover your local bakeries!</p>
-      <button className="btn-hero" onClick={props.handleOnClick}>
+      <p className="text-lg mb-2 md:text-xl"> Discover your local bakeries!</p>
+      <button
+        className="btn-hero md:text-lg md:font-bold"
+        onClick={props.handleOnClick}
+      >
         {props.buttonText}
       </button>
     </div>

@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 body {
-    @apply bg-mesh-bg bg-cover bg-no-repeat md:bg-auto h-full font-sans;
+    @apply bg-mesh-bg bg-cover bg-no-repeat h-full font-sans;
 }
 
 @layer components {
