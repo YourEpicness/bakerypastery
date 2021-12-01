@@ -7,6 +7,17 @@ body {
     @apply bg-mesh-bg bg-cover bg-no-repeat h-full font-sans;
 }
 
+@layer base {
+    @font-face {
+        font-family: BalsamiqSans;
+        src: url(/fonts/BalsamiqSans-Bold.ttf) format("ttf");
+    }
+    @font-face {
+        font-family: BalsamiqSans;
+        src: url(/fonts/BalsamiqSans-Regular.ttf) format("ttf");
+    }
+}
+
 @layer components {
     .header {
         @apply flex text-center text-5xl font-bold mb-4 tracking-tight leading-none

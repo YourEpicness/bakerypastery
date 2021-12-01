@@ -4,7 +4,8 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     fontFamily: {
-      sans: ["Helvetica", "Arial", "sans-serif"],
+      sans: ["BalsamiqSans", "Helvetica", "Arial", "sans-serif"],
+      custom: ["BalsamiqSans"],
     },
     extend: {
       backgroundImage: {
