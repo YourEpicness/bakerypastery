@@ -3,29 +3,34 @@ import { GetStaticProps, GetStaticPaths } from "next";
 import { useRouter } from "next/dist/client/router";
 import Link from "next/link";
 import Image from "next/image";
-import bakeryData from "../../data/coffee-stores.json";
 import Head from "next/head";
+import { fetchBakeries } from "../../lib/bakeries";
 
-export const getStaticProps: GetStaticProps = (context) => {
+export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context;
   console.log("params", params);
+
+  const bakeries = await fetchBakeries();
   return {
     props: {
-      bakery: bakeryData.find((bakeryStore) => {
-        return bakeryStore.id.toString() === params?.id; //dynamic id
+      bakery: bakeries.find((bakery: any) => {
+        return bakery.fsq_id.toString() === params?.id; //dynamic id
       }),
     },
   };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = bakeryData.map((bakery) => {
+  const bakeries = await fetchBakeries();
+
+  const paths = bakeries.map((bakery: any) => {
     return {
       params: {
-        id: bakery.id.toString(),
+        id: bakery.fsq_id.toString(),
       },
     };
   });
+
   return {
     paths,
     fallback: true,
@@ -40,7 +45,11 @@ const Bakery: NextPage<{ bakery: any }> = (props) => {
     return <div className="">Loading...</div>;
   }
 
-  const { imgUrl, address, name, neighborhood } = props.bakery;
+  const {
+    imgUrl,
+    location: { address, neighborhood },
+    name,
+  } = props.bakery;
 
   console.log("props", props);
   return (
@@ -58,11 +67,19 @@ const Bakery: NextPage<{ bakery: any }> = (props) => {
           </div>
 
           <p>{name}</p>
-          <Image src={imgUrl} width={400} height={400} alt={name} />
+          <Image
+            src={
+              imgUrl ||
+              "https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
+            }
+            width={400}
+            height={400}
+            alt={name}
+          />
         </div>
         <div className="">
           <p>{address}</p>
-          <p>{neighborhood}</p>
+          {neighborhood && <p>{neighborhood}</p>}
         </div>
       </div>
     </div>

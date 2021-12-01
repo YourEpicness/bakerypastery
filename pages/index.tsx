@@ -6,8 +6,6 @@ import Image from "next/image";
 import Card from "../components/card";
 import { fetchBakeries } from "../lib/bakeries";
 
-// import bakeryData from "../data/coffee-stores.json";
-
 export const getStaticProps: GetStaticProps = async (context) => {
   const bakeries = await fetchBakeries();
   return {
