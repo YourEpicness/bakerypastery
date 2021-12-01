@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { useRouter } from "next/dist/client/router";
 import Link from "next/link";
+import Image from "next/image";
 import bakeryData from "../../data/coffee-stores.json";
 import Head from "next/head";
 
@@ -39,7 +40,7 @@ const Bakery: NextPage<{ bakery: any }> = (props) => {
     return <div className="">Loading...</div>;
   }
 
-  const { address, name, neighborhood } = props.bakery;
+  const { imgUrl, address, name, neighborhood } = props.bakery;
 
   console.log("props", props);
   return (
@@ -47,14 +48,23 @@ const Bakery: NextPage<{ bakery: any }> = (props) => {
       <Head>
         <title>{name}</title>
       </Head>
-      Bakery Page {router.query.id}
-      <Link href="/"> Back to home</Link>
-      <Link href="/bakery/dynamic">
-        <a href="">Go to page dynamic</a>
-      </Link>
-      <p>{address}</p>
-      <p>{name}</p>
-      <p>{neighborhood}</p>
+      <div className="">
+        <div className="">
+          <div className="">
+            <Link href="/"> Back to home</Link>
+            <Link href="/bakery/dynamic">
+              <a href="">Go to page dynamic</a>
+            </Link>
+          </div>
+
+          <p>{name}</p>
+          <Image src={imgUrl} width={400} height={400} alt={name} />
+        </div>
+        <div className="">
+          <p>{address}</p>
+          <p>{neighborhood}</p>
+        </div>
+      </div>
     </div>
   );
 };
