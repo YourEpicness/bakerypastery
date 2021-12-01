@@ -44,19 +44,23 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData: bakeries }) => {
           <Image src="/static/baker.png" width={400} height={400} />
         </div>
       </main>
-
-      <div className="grid">
-        {bakeries.map((bakery) => {
-          return (
-            <Card
-              key={bakery.id}
-              name={bakery.name}
-              imgUrl={bakery.imgUrl}
-              href={`/bakery/${bakery.id}`}
-            />
-          );
-        })}
-      </div>
+      {bakeries.length > 0 && (
+        <>
+          <h2 className="mt-10"> Chicago Bakeries</h2>
+          <div className="grid">
+            {bakeries.map((bakery) => {
+              return (
+                <Card
+                  key={bakery.id}
+                  name={bakery.name}
+                  imgUrl={bakery.imgUrl}
+                  href={`/bakery/${bakery.id}`}
+                />
+              );
+            })}
+          </div>
+        </>
+      )}
     </div>
   );
 };
