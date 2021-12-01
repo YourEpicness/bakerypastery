@@ -4,28 +4,15 @@ import Banner from "../components/banner";
 import Head from "next/head";
 import Image from "next/image";
 import Card from "../components/card";
+import { fetchBakeries } from "../lib/bakeries";
 
 // import bakeryData from "../data/coffee-stores.json";
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const options = {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      Authorization: "fsq3KlJG7VnqADlg0vyF07bqFRn5oMKGuOdqxf8UQ2oy3y8=",
-    },
-  };
-  let bakeryData: [] = [];
-  const response = await fetch(
-    "https://api.foursquare.com/v3/places/search?query=bakery&ll=41.8781%2C-87.6298&radius=300&limit=6",
-    options
-  );
-  const data = await response.json();
-  console.log(data);
-
+  const bakeries = await fetchBakeries();
   return {
     props: {
-      bakeryData: data.results,
+      bakeryData: bakeries,
     },
   };
 };
