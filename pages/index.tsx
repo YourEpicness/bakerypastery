@@ -1,9 +1,29 @@
 import type { NextPage } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import Banner from "../components/banner";
 import Head from "next/head";
 import Image from "next/image";
+import Card from "../components/card";
 
-const Home: NextPage = () => {
+import bakeryData from "../data/coffee-stores.json";
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  return {
+    props: { bakeryData },
+  };
+};
+
+interface Data {
+  address: string;
+  id: number;
+  imgUrl: string;
+  name: string;
+  neighborhood: string;
+  websiteUrl: string;
+}
+
+const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData: bakeries }) => {
+  console.log("props", bakeries);
   const handleOnBannerClick = (): void => {
     console.log("hi banner button");
   };
@@ -24,6 +44,19 @@ const Home: NextPage = () => {
           <Image src="/static/baker.png" width={400} height={400} />
         </div>
       </main>
+
+      <div className="grid">
+        {bakeries.map((bakery) => {
+          return (
+            <Card
+              key={bakery.id}
+              name={bakery.name}
+              imgUrl={bakery.imgUrl}
+              href={`/bakery/${bakery.id}`}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };
