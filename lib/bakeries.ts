@@ -30,6 +30,7 @@ export const fetchBakeries = async (
   limit: number = 6
 ) => {
   const photos = (await getBakeryPhotos()) || "";
+
   const options: any = {
     method: "GET",
     headers: {
@@ -37,6 +38,8 @@ export const fetchBakeries = async (
       Authorization: process.env.NEXT_PUBLIC_FSQ_API_KEY,
     },
   };
+  options.headers["Access-Control-Allow-Origin"] = "*";
+  console.log(options);
   let bakeryData: [] = [];
   const url = getUrlForCoffeeStores("bakery", latLong, limit);
   const response = await fetch(url, options);

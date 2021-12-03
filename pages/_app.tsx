@@ -2,10 +2,10 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import Footer from "../components/footer";
 import { createContext, useReducer } from "react";
+const defaultState: any = {};
+export const StoreContext = createContext(defaultState);
 
-const StoreContext = createContext({});
-
-const ACTION_TYPES = {
+export const ACTION_TYPES = {
   SET_LAT_LONG: "SET_LAT_LONG",
   SET_BAKERIES: "SET_BAKERIES",
 };

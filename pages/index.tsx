@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useEffect } from "react";
+import { useEffect, useContext, useState } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Banner from "../components/banner";
 import Head from "next/head";
@@ -7,6 +7,7 @@ import Image from "next/image";
 import Card from "../components/card";
 import { fetchBakeries } from "../lib/bakeries";
 import useTrackLocation from "../hooks/use-track-location";
+import { ACTION_TYPES, StoreContext } from "./_app";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const bakeries = await fetchBakeries();
@@ -27,11 +28,18 @@ interface Data {
   websiteUrl: string;
 }
 
-const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData: bakeries }) => {
-  console.log("props", bakeries);
+const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData }) => {
+  console.log("props", bakeryData);
 
-  const { handleTrackLocation, latLong, locationErrorMsg, isFindingLocation } =
+  const { handleTrackLocation, locationErrorMsg, isFindingLocation } =
     useTrackLocation();
+
+  // const [bakeries, setBakeries] = useState("");
+  const [bakeriesError, setBakeriesError] = useState(null);
+
+  const { dispatch, state } = useContext(StoreContext);
+
+  const { bakeries, latLong } = state;
 
   console.log({ latLong, locationErrorMsg });
 
@@ -39,8 +47,14 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData: bakeries }) => {
     if (latLong) {
       try {
         const fetchedBakeries = async () => await fetchBakeries();
-        fetchBakeries();
+        fetchedBakeries();
         console.log({ fetchedBakeries });
+        dispatch({
+          type: ACTION_TYPES.SET_BAKERIES,
+          payload: {
+            bakeries: fetchedBakeries,
+          },
+        });
         // set bakeries
       } catch (err) {
         // set error
@@ -70,11 +84,11 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData: bakeries }) => {
           <Image src="/static/baker.png" width={400} height={400} />
         </div>
       </main>
-      {bakeries.length > 0 && (
+      {bakeryData.length > 0 && (
         <>
           <h2 className="mt-10"> Chicago Bakeries</h2>
           <div className="grid">
-            {bakeries.map((bakery) => {
+            {bakeryData.map((bakery: any) => {
               return (
                 <Card
                   key={bakery.fsq_id}
