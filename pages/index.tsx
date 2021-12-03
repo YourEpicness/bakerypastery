@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { useEffect } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Banner from "../components/banner";
 import Head from "next/head";
@@ -9,6 +10,7 @@ import useTrackLocation from "../hooks/use-track-location";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const bakeries = await fetchBakeries();
+
   return {
     props: {
       bakeryData: bakeries,
@@ -32,6 +34,20 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData: bakeries }) => {
     useTrackLocation();
 
   console.log({ latLong, locationErrorMsg });
+
+  useEffect(() => {
+    if (latLong) {
+      try {
+        const fetchedBakeries = async () => await fetchBakeries();
+        fetchBakeries();
+        console.log({ fetchedBakeries });
+        // set bakeries
+      } catch (err) {
+        // set error
+        console.log({ err });
+      }
+    }
+  }, [latLong]);
   const handleOnBannerClick = (): void => {
     console.log("hi banner button");
     handleTrackLocation();

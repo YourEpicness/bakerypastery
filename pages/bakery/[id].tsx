@@ -11,11 +11,12 @@ export const getStaticProps: GetStaticProps = async (context) => {
   console.log("params", params);
 
   const bakeries = await fetchBakeries();
+  const findBakeryById = bakeries.find((bakery: any) => {
+    return bakery.id.toString() === params?.id;
+  });
   return {
     props: {
-      bakery: bakeries.find((bakery: any) => {
-        return bakery.fsq_id.toString() === params?.id; //dynamic id
-      }),
+      bakery: findBakeryById ? findBakeryById : {},
     },
   };
 };

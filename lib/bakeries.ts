@@ -2,7 +2,7 @@
 import { createApi } from "unsplash-js";
 
 const unsplashApi: any = createApi({
-  accessKey: process.env.UNSPLASH_API_KEY,
+  accessKey: process.env.NEXT_PUBLIC_UNSPLASH_API_KEY,
 });
 
 const getUrlForCoffeeStores = (
@@ -17,7 +17,7 @@ const getBakeryPhotos = async () => {
   const photos = await unsplashApi.search.getPhotos({
     query: "bakery",
     page: 1,
-    perPage: 10,
+    perPage: 40,
     orientation: "portrait",
   });
 
@@ -25,17 +25,20 @@ const getBakeryPhotos = async () => {
   return unsplashResults?.map((result: any) => result.urls["small"]);
 };
 
-export const fetchBakeries = async () => {
+export const fetchBakeries = async (
+  latLong: string = "41.8781%2C-87.6298",
+  limit: number = 6
+) => {
   const photos = (await getBakeryPhotos()) || "";
   const options: any = {
     method: "GET",
     headers: {
       Accept: "application/json",
-      Authorization: process.env.FSQ_API_KEY,
+      Authorization: process.env.NEXT_PUBLIC_FSQ_API_KEY,
     },
   };
   let bakeryData: [] = [];
-  const url = getUrlForCoffeeStores("bakery", "41.8781%2C-87.6298", 6);
+  const url = getUrlForCoffeeStores("bakery", latLong, limit);
   const response = await fetch(url, options);
   const data = await response.json();
   console.log(data);
