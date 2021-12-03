@@ -5,6 +5,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Card from "../components/card";
 import { fetchBakeries } from "../lib/bakeries";
+import useTrackLocation from "../hooks/use-track-location";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const bakeries = await fetchBakeries();
@@ -26,8 +27,14 @@ interface Data {
 
 const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData: bakeries }) => {
   console.log("props", bakeries);
+
+  const { handleTrackLocation, latLong, locationErrorMsg, isFindingLocation } =
+    useTrackLocation();
+
+  console.log({ latLong, locationErrorMsg });
   const handleOnBannerClick = (): void => {
     console.log("hi banner button");
+    handleTrackLocation();
   };
 
   return (
@@ -39,9 +46,10 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData: bakeries }) => {
 
       <main className="flex flex-col justify-center items-center">
         <Banner
-          buttonText="View bakeries nearby"
+          buttonText={isFindingLocation ? "Locating..." : "View stores nearby"}
           handleOnClick={handleOnBannerClick}
         />
+        {locationErrorMsg && <p>? Something went wrong: {locationErrorMsg} </p>}
         <div className="absolute top-0 right-1/4 md:top-0 md:right-1/8">
           <Image src="/static/baker.png" width={400} height={400} />
         </div>
