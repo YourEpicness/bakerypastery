@@ -57,9 +57,9 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData }) => {
           },
         });
         // set bakeries
-      } catch (err) {
+      } catch (err: any) {
         // set error
-        console.log({ err });
+        setBakeriesError(err.message);
       }
     }
   }, [latLong]);
@@ -81,6 +81,7 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData }) => {
           handleOnClick={handleOnBannerClick}
         />
         {locationErrorMsg && <p>? Something went wrong: {locationErrorMsg} </p>}
+        {bakeriesError && <p>? Something went wrong: {bakeriesError} </p>}
         <div className="absolute top-0 right-1/4 md:top-0 md:right-1/8">
           <Image src="/static/baker.png" width={400} height={400} />
         </div>
