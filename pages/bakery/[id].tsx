@@ -5,6 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import Head from "next/head";
 import { fetchBakeries } from "../../lib/bakeries";
+import { StoreContext } from "../_app";
+import { useContext, useEffect, useState } from "react";
+import { isEmpty } from "../../utils";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context;
@@ -36,16 +39,35 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-const Bakery: NextPage<{ bakery: any }> = (props) => {
+const Bakery: NextPage<{ bakery: any }> = (initialProps) => {
   const router = useRouter();
+  const id = router.query.id;
+  console.log(id);
+  const [bakery, setBakery] = useState(initialProps.bakery);
+
+  const {
+    state: { bakeries },
+  } = useContext(StoreContext);
+
+  console.log("store", bakeries);
+  useEffect(() => {
+    if (isEmpty(initialProps.bakery)) {
+      if (bakeries.length) {
+        const findBakeryById = bakeries.find((bakery: any) => {
+          return bakery.id.toString() === id;
+        });
+        setBakery(findBakeryById);
+      }
+    }
+  }, [id, initialProps, initialProps.bakery]);
 
   if (router.isFallback) {
     return <div className="">Loading...</div>;
   }
 
-  const { imgUrl, address, location, neighborhood, name } = props.bakery;
+  const { imgUrl, address, neighborhood, name } = bakery;
 
-  console.log("props", props);
+  console.log("bakery", bakery);
   return (
     <div>
       <Head>

@@ -29,6 +29,8 @@ interface Data {
 }
 
 const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData }) => {
+  const placeholder =
+    "https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80";
   const { handleTrackLocation, locationErrorMsg, isFindingLocation } =
     useTrackLocation();
 
@@ -44,7 +46,7 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData }) => {
     if (latLong) {
       try {
         const fetchedBakeries = async () => {
-          bkries.push(...(await fetchBakeries(latLong, 6)));
+          bkries.push(...(await fetchBakeries(latLong, 20)));
         };
         fetchedBakeries();
 
@@ -83,6 +85,25 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData }) => {
           <Image src="/static/baker.png" width={400} height={400} />
         </div>
       </main>
+      {bakeries.length > 0 && (
+        <>
+          <div className="">
+            <h2 className=""> Stores near me </h2>
+            <div className="">
+              {bakeries.map((bakery: any) => {
+                return (
+                  <Card
+                    key={bakery.id}
+                    name={bakery.name}
+                    imgUrl={bakery.imgUrl || placeholder}
+                    href={`/bakery/${bakery.id}`}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        </>
+      )}
       {bakeryData.length > 0 && (
         <>
           <h2 className="mt-10"> Chicago Bakeries</h2>
