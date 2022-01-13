@@ -10,7 +10,7 @@ const getUrlForCoffeeStores = (
   latLong: string,
   limit: number
 ) => {
-  return `https://api.foursquare.com/v3/places/search?query=${query}&ll=${latLong}&radius=300&limit=${limit}`;
+  return `https://api.foursquare.com/v3/places/nearby?query=${query}&ll=${latLong}&radius=300&limit=${limit}`;
 };
 
 const getBakeryPhotos = async () => {
@@ -38,17 +38,22 @@ export const fetchBakeries = async (
       Authorization: process.env.NEXT_PUBLIC_FSQ_API_KEY,
     },
   };
+
   options.headers["Access-Control-Allow-Origin"] = "*";
-  console.log(options);
+
   let bakeryData: [] = [];
   const url = getUrlForCoffeeStores("bakery", latLong, limit);
+
   const response = await fetch(url, options);
   const data = await response.json();
-  console.log(data);
 
-  return data.results.map((result: any, idx: any) => {
+  return data.results.map((venue: any, idx: any) => {
     return {
-      ...result,
+      id: venue.fsq_id,
+      address: venue.location.address || "",
+      name: venue.name,
+      neighborhood:
+        venue.location.neighborhood || venue.location.crossStreet || "",
       imgUrl: photos[idx],
     };
   });

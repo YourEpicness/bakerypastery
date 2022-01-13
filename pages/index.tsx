@@ -29,8 +29,6 @@ interface Data {
 }
 
 const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData }) => {
-  console.log("props", bakeryData);
-
   const { handleTrackLocation, locationErrorMsg, isFindingLocation } =
     useTrackLocation();
 
@@ -41,18 +39,19 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData }) => {
 
   const { bakeries, latLong } = state;
 
-  console.log({ latLong, locationErrorMsg });
-
   useEffect(() => {
+    let bkries: any = [];
     if (latLong) {
       try {
-        const fetchedBakeries = async () => await fetchBakeries();
+        const fetchedBakeries = async () => {
+          bkries.push(...(await fetchBakeries(latLong, 6)));
+        };
         fetchedBakeries();
-        console.log({ fetchedBakeries });
+
         dispatch({
           type: ACTION_TYPES.SET_BAKERIES,
           payload: {
-            bakeries: fetchedBakeries,
+            bakeries: bkries,
           },
         });
         // set bakeries
@@ -62,8 +61,8 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData }) => {
       }
     }
   }, [latLong]);
+
   const handleOnBannerClick = (): void => {
-    console.log("hi banner button");
     handleTrackLocation();
   };
 
@@ -91,13 +90,13 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData }) => {
             {bakeryData.map((bakery: any) => {
               return (
                 <Card
-                  key={bakery.fsq_id}
+                  key={bakery.id}
                   name={bakery.name}
                   imgUrl={
                     bakery.imgUrl ||
                     "https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
                   }
-                  href={`/bakery/${bakery.fsq_id}`}
+                  href={`/bakery/${bakery.id}`}
                 />
               );
             })}

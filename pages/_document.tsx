@@ -15,7 +15,7 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <link
+          {/* <link
             rel="preload"
             href="/fonts/BalsamiqSans-Bold.ttf"
             as="font"
@@ -26,7 +26,7 @@ class MyDocument extends Document {
             href="/fonts/BalsamiqSans-Regular.ttf"
             as="font"
             crossOrigin="anonymous"
-          />
+          /> */}
         </Head>
         <body>
           <Main></Main>

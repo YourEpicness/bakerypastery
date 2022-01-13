@@ -8,7 +8,6 @@ import { fetchBakeries } from "../../lib/bakeries";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context;
-  console.log("params", params);
 
   const bakeries = await fetchBakeries();
   const findBakeryById = bakeries.find((bakery: any) => {
@@ -23,11 +22,10 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const bakeries = await fetchBakeries();
-
   const paths = bakeries.map((bakery: any) => {
     return {
       params: {
-        id: bakery.fsq_id.toString(),
+        id: bakery.id.toString(),
       },
     };
   });
@@ -40,17 +38,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 const Bakery: NextPage<{ bakery: any }> = (props) => {
   const router = useRouter();
-  console.log("router", router);
 
   if (router.isFallback) {
     return <div className="">Loading...</div>;
   }
 
-  const {
-    imgUrl,
-    location: { address, neighborhood },
-    name,
-  } = props.bakery;
+  const { imgUrl, address, location, neighborhood, name } = props.bakery;
 
   console.log("props", props);
   return (
