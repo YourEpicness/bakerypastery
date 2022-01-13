@@ -69,7 +69,7 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData }) => {
   };
 
   return (
-    <div className="flex place-content-center h-screen md:block md:m-10">
+    <div className="flex h-full md:block md:m-10">
       <Head>
         <title> Bakery Pastery</title>
         <link rel="icon" href="/favicon.ico" />
@@ -87,36 +87,35 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData }) => {
       </main>
       {bakeries.length > 0 && (
         <>
-          <div className="">
-            <h2 className=""> Stores near me </h2>
-            <div className="">
-              {bakeries.map((bakery: any) => {
-                return (
-                  <Card
-                    key={bakery.id}
-                    name={bakery.name}
-                    imgUrl={bakery.imgUrl || placeholder}
-                    href={`/bakery/${bakery.id}`}
-                  />
-                );
-              })}
-            </div>
+          <h2 className="mt-10 text-3xl text-white font-bold">
+            Stores near me
+          </h2>
+          <div className="grid grid-cols-3 justify-items-center">
+            {bakeries.map((bakery: any) => {
+              return (
+                <Card
+                  key={bakery.id}
+                  name={bakery.name}
+                  imgUrl={bakery.imgUrl || placeholder}
+                  href={`/bakery/${bakery.id}`}
+                />
+              );
+            })}
           </div>
         </>
       )}
       {bakeryData.length > 0 && (
         <>
-          <h2 className="mt-10"> Chicago Bakeries</h2>
-          <div className="grid">
+          <h2 className="mt-10 text-3xl text-white font-bold">
+            Chicago Bakeries
+          </h2>
+          <div className="grid grid-cols-3 justify-items-center">
             {bakeryData.map((bakery: any) => {
               return (
                 <Card
                   key={bakery.id}
                   name={bakery.name}
-                  imgUrl={
-                    bakery.imgUrl ||
-                    "https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
-                  }
+                  imgUrl={bakery.imgUrl || placeholder}
                   href={`/bakery/${bakery.id}`}
                 />
               );

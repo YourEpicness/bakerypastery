@@ -73,17 +73,16 @@ const Bakery: NextPage<{ bakery: any }> = (initialProps) => {
       <Head>
         <title>{name}</title>
       </Head>
-      <div className="">
-        <div className="">
-          <div className="">
-            <Link href="/"> Back to home</Link>
-            <Link href="/bakery/dynamic">
-              <a href="">Go to page dynamic</a>
-            </Link>
-          </div>
-
-          <p>{name}</p>
+      <div className="px-10 pt-3">
+        <Link href="/">
+          <a className=" font-bold"> ⬅ Back to home</a>
+        </Link>
+      </div>
+      <div className="grid grid-cols-2 px-10 py-3 gap-5 ">
+        <div className="flex flex-col">
+          <p className="text-3xl font-bold text-white my-3">{name}</p>
           <Image
+            className="rounded-2xl grow-0"
             src={
               imgUrl ||
               "https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
@@ -93,9 +92,14 @@ const Bakery: NextPage<{ bakery: any }> = (initialProps) => {
             alt={name}
           />
         </div>
-        <div className="">
-          <p>{address}</p>
-          {neighborhood && <p>{neighborhood}</p>}
+        <div className="glass mt-[4rem] h-2/5 p-5">
+          <p className="text-xl font-semibold">{address}</p>
+          {neighborhood && (
+            <p className="font-semibold text-xl">{neighborhood}</p>
+          )}
+          <button className="mt-10 bg-blue-600 p-2 text-white font-bold rounded-md">
+            Up vote!
+          </button>
         </div>
       </div>
     </div>

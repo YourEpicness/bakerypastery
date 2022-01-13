@@ -8,15 +8,20 @@ const Card: NextPage<{
   href: string;
 }> = ({ href, name, imgUrl }) => {
   return (
-    <div className="my-10">
+    <div className="my-10 glass">
       <Link href={href}>
-        <div className="">
+        <div className="p-5 hover:bg-purple-400 cursor-pointer">
           <a className="">
-            <div className="">
-              <h2 className="">{name}</h2>
+            <div className="mb-2">
+              <h2 className="font-semibold text-lg">{name}</h2>
             </div>
             <div className="">
-              <Image className="" src={imgUrl} width={260} height={160} />
+              <Image
+                className="rounded-2xl"
+                src={imgUrl}
+                width={260}
+                height={160}
+              />
             </div>
           </a>
         </div>
