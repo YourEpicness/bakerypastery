@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Head from "next/head";
 import { fetchBakeries } from "../../lib/bakeries";
-import { StoreContext } from "../_app";
+import { StoreContext } from "../../store/store-context";
 import { useContext, useEffect, useState } from "react";
 import { isEmpty } from "../../utils";
 
