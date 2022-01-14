@@ -4,7 +4,7 @@ import { useRouter } from "next/dist/client/router";
 import Link from "next/link";
 import Image from "next/image";
 import Head from "next/head";
-import { fetchBakeries } from "../../lib/bakeries";
+import { Bakery, fetchBakeries } from "../../lib/bakeries";
 import { StoreContext } from "../../store/store-context";
 import { useContext, useEffect, useState } from "react";
 import { isEmpty } from "../../utils";
@@ -13,7 +13,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context;
 
   const bakeries = await fetchBakeries();
-  const findBakeryById = bakeries.find((bakery: any) => {
+  const findBakeryById = bakeries.find((bakery: Bakery) => {
     return bakery.id.toString() === params?.id;
   });
   return {
@@ -25,7 +25,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const bakeries = await fetchBakeries();
-  const paths = bakeries.map((bakery: any) => {
+  const paths = bakeries.map((bakery: Bakery) => {
     return {
       params: {
         id: bakery.id.toString(),
@@ -39,11 +39,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-const Bakery: NextPage<{ bakery: any }> = (initialProps) => {
+const Bakery: NextPage<{ bakery: Bakery }> = (initialProps) => {
   const router = useRouter();
   const id = router.query.id;
-  console.log(id);
-  const [bakery, setBakery] = useState(initialProps.bakery);
+
+  const [bakery, setBakery]: [Bakery, any] = useState(initialProps.bakery);
 
   const {
     state: { bakeries },
@@ -53,7 +53,7 @@ const Bakery: NextPage<{ bakery: any }> = (initialProps) => {
   useEffect(() => {
     if (isEmpty(initialProps.bakery)) {
       if (bakeries.length) {
-        const findBakeryById = bakeries.find((bakery: any) => {
+        const findBakeryById = bakeries.find((bakery: Bakery) => {
           return bakery.id.toString() === id;
         });
         setBakery(findBakeryById);

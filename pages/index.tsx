@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { useEffect, useContext, useState } from "react";
-import { GetStaticPaths, GetStaticProps } from "next";
+import { GetStaticProps } from "next";
 import Banner from "../components/banner";
 import Head from "next/head";
 import Image from "next/image";
@@ -19,13 +19,12 @@ export const getStaticProps: GetStaticProps = async (context) => {
   };
 };
 
-const Home: NextPage<{ bakeryData: Venue[] }> = ({ bakeryData }) => {
+const Home: NextPage<{ bakeryData: Bakery[] }> = ({ bakeryData }) => {
   const placeholder =
     "https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80";
   const { handleTrackLocation, locationErrorMsg, isFindingLocation } =
     useTrackLocation();
 
-  // const [bakeries, setBakeries] = useState("");
   const [bakeriesError, setBakeriesError] = useState(null);
 
   const { dispatch, state } = useContext(StoreContext);
@@ -33,7 +32,7 @@ const Home: NextPage<{ bakeryData: Venue[] }> = ({ bakeryData }) => {
   const { bakeries, latLong } = state;
 
   useEffect(() => {
-    let bkries: any = [];
+    let bkries: Bakery[] = [];
     if (latLong) {
       try {
         const fetchedBakeries = async () => {
@@ -85,7 +84,7 @@ const Home: NextPage<{ bakeryData: Venue[] }> = ({ bakeryData }) => {
             Stores near me
           </h2>
           <div className="grid grid-cols-3 justify-items-center">
-            {bakeries.map((bakery: any) => {
+            {bakeries.map((bakery) => {
               return (
                 <Card
                   key={bakery.id}
@@ -104,7 +103,7 @@ const Home: NextPage<{ bakeryData: Venue[] }> = ({ bakeryData }) => {
             Chicago Bakeries
           </h2>
           <div className="grid grid-cols-3 justify-items-center">
-            {bakeryData.map((bakery: any) => {
+            {bakeryData.map((bakery) => {
               return (
                 <Card
                   key={bakery.id}

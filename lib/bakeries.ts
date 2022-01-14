@@ -1,7 +1,7 @@
 // initialize unsplash
 import { createApi } from "unsplash-js";
 
-const unsplashApi: any = createApi({
+const unsplashApi = createApi({
   accessKey: process.env.NEXT_PUBLIC_UNSPLASH_API_KEY,
 });
 
@@ -22,7 +22,7 @@ const getBakeryPhotos = async () => {
   });
 
   const unsplashResults = photos.response?.results;
-  return unsplashResults?.map((result: any) => result.urls["small"]);
+  return unsplashResults?.map((result) => result.urls["small"]);
 };
 
 export interface Bakery {
