@@ -25,10 +25,37 @@ const getBakeryPhotos = async () => {
   return unsplashResults?.map((result: any) => result.urls["small"]);
 };
 
+export interface Bakery {
+  address: string;
+  id: number;
+  imgUrl: string;
+  name: string;
+  neighborhood: string;
+}
+
+export interface Venue {
+  address: string;
+  fsq_id: number;
+  imgUrl: string;
+  name: string;
+  neighborhood: string;
+  websiteUrl: string;
+  location: {
+    neighborhood: string;
+    crossStreet: string;
+    address: string;
+    locality: string;
+  };
+}
+
+interface Data {
+  results: Venue[];
+}
+
 export const fetchBakeries = async (
   latLong: string = "41.8781%2C-87.6298",
   limit: number = 6
-) => {
+): Promise<Bakery[]> => {
   const photos = (await getBakeryPhotos()) || "";
 
   const options: any = {
@@ -41,19 +68,21 @@ export const fetchBakeries = async (
 
   options.headers["Access-Control-Allow-Origin"] = "*";
 
-  let bakeryData: [] = [];
   const url = getUrlForCoffeeStores("bakery", latLong, limit);
 
   const response = await fetch(url, options);
-  const data = await response.json();
+  const data: Data = await response.json();
 
-  return data.results.map((venue: any, idx: any) => {
+  return data.results.map((venue: Venue, idx: number) => {
     return {
       id: venue.fsq_id,
       address: venue.location.address || "",
       name: venue.name,
       neighborhood:
-        venue.location.neighborhood || venue.location.crossStreet || "",
+        venue.location.neighborhood ||
+        venue.location.crossStreet ||
+        venue.location.locality ||
+        "",
       imgUrl: photos[idx],
     };
   });

@@ -5,12 +5,12 @@ import Banner from "../components/banner";
 import Head from "next/head";
 import Image from "next/image";
 import Card from "../components/card";
-import { fetchBakeries } from "../lib/bakeries";
+import { Bakery, fetchBakeries, Venue } from "../lib/bakeries";
 import useTrackLocation from "../hooks/use-track-location";
 import { ACTION_TYPES, StoreContext } from "../store/store-context";
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const bakeries = await fetchBakeries();
+  const bakeries: Bakery[] = await fetchBakeries();
 
   return {
     props: {
@@ -19,16 +19,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   };
 };
 
-interface Data {
-  address: string;
-  fsq_id: number;
-  imgUrl: string;
-  name: string;
-  neighborhood: string;
-  websiteUrl: string;
-}
-
-const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData }) => {
+const Home: NextPage<{ bakeryData: Venue[] }> = ({ bakeryData }) => {
   const placeholder =
     "https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80";
   const { handleTrackLocation, locationErrorMsg, isFindingLocation } =
@@ -46,7 +37,9 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData }) => {
     if (latLong) {
       try {
         const fetchedBakeries = async () => {
-          bkries.push(...(await fetchBakeries(latLong, 20)));
+          const res = await fetch(`/api/bakeries?latLong=${latLong}&limit=30`);
+          const data = await res.json();
+          bkries.push(...data);
         };
         fetchedBakeries();
 
@@ -56,7 +49,7 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData }) => {
             bakeries: bkries,
           },
         });
-        // set bakeries
+        setBakeriesError(null);
       } catch (err: any) {
         // set error
         setBakeriesError(err.message);
@@ -64,7 +57,7 @@ const Home: NextPage<{ bakeryData: Data[] }> = ({ bakeryData }) => {
     }
   }, [latLong]);
 
-  const handleOnBannerClick = (): void => {
+  const handleOnBannerClick = () => {
     handleTrackLocation();
   };
 

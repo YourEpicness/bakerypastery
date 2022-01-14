@@ -1,14 +1,30 @@
-import { createContext, useReducer } from "react";
+import { createContext, Dispatch, useReducer } from "react";
+import { Bakery } from "../lib/bakeries";
 
 const defaultState: any = {};
-export const StoreContext = createContext(defaultState);
+export const StoreContext = createContext<Store>(defaultState);
 
-export const ACTION_TYPES = {
-  SET_LAT_LONG: "SET_LAT_LONG",
-  SET_BAKERIES: "SET_BAKERIES",
-};
+export interface Store {
+  dispatch: Dispatch<any>;
+  state: State;
+}
 
-const storeReducer = (state: any, action: any) => {
+export interface State {
+  latLong: string;
+  bakeries: Bakery[];
+}
+
+export enum ACTION_TYPES {
+  SET_LAT_LONG,
+  SET_BAKERIES,
+}
+
+export interface Action {
+  type: ACTION_TYPES;
+  payload: State;
+}
+
+const storeReducer = (state: State, action: Action) => {
   switch (action.type) {
     case ACTION_TYPES.SET_LAT_LONG: {
       return { ...state, latLong: action.payload.latLong };
@@ -17,12 +33,12 @@ const storeReducer = (state: any, action: any) => {
       return { ...state, bakeries: action.payload.bakeries };
     }
     default:
-      throw new Error(`Unahndled action type: ${action.type}`);
+      throw new Error(`Unhandled action type: ${action.type}`);
   }
 };
 
 const StoreProvider = ({ children }: any) => {
-  const initialState = {
+  const initialState: State = {
     latLong: "",
     bakeries: [],
   };
