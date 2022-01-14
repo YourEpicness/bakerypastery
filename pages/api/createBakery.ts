@@ -1,31 +1,13 @@
-import { Base, Record, Table } from "airtable";
+import { cleanData, db } from "../../lib/airtable";
 import { NextApiRequest, NextApiResponse } from "next";
-const Airtable = require("airtable");
-
-interface Database {
-  id: number;
-  name: string;
-  address: string;
-  neighborhood: string;
-  imgUrl: string;
-  votes: number;
-}
-
-Airtable.configure({
-  endpointUrl: "https://api.airtable.com",
-  apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY,
-});
-const base = Airtable.base(process.env.NEXT_PUBLIC_AIRTABLE_BASE_KEY);
-const db = base("bakeries");
-
-const cleanData = (dbFunction: any) => {
-  return dbFunction
-    .map((record: any) => record.fields)
-    .filter((record: any) => record.name);
-};
 
 const createBakery = async (req: NextApiRequest, res: NextApiResponse) => {
-  const id = req.body.id || 1;
+  const id = req.body.id;
+  // Error checking
+  if (!id) {
+    return res.status(400).json({ error: "Missing id" });
+  }
+
   const findBakeryRecords = await db
     .select({
       filterByFormula: `id=${id}`,
@@ -35,7 +17,7 @@ const createBakery = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const { id, name, address, neighborhood, votes, imgUrl } = req.body;
     // error checking
-    if (!(id && name)) {
+    if (!id || !name) {
       return res.status(400).json({ error: "Missing id or name" });
     }
 
@@ -63,11 +45,6 @@ const createBakery = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (req.method === "GET") {
-    // Error checking
-    if (!id) {
-      return res.status(400).json({ error: "Missing id" });
-    }
-
     // Find a record
     try {
       if (findBakeryRecords.length) {
@@ -76,10 +53,10 @@ const createBakery = async (req: NextApiRequest, res: NextApiResponse) => {
       }
     } catch (err) {
       console.error("Error finding store", err);
-      res.status(500).json({ message: "Error finding store", err });
+      return res.status(500).json({ message: "Error finding store", err });
     }
 
-    return res.json({ message: "Please create a bakery" });
+    return res.status(404).json({ error: "Bakery not found" });
   }
 };
 
