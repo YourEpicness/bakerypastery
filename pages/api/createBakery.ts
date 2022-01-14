@@ -34,6 +34,11 @@ const createBakery = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "POST") {
     const { id, name, address, neighborhood, votes, imgUrl } = req.body;
+    // error checking
+    if (!(id && name)) {
+      return res.status(400).json({ error: "Missing id or name" });
+    }
+
     // Create a record
     if (findBakeryRecords.length) {
       return res.json({ message: "Record already exists" });
@@ -58,6 +63,11 @@ const createBakery = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (req.method === "GET") {
+    // Error checking
+    if (!id) {
+      return res.status(400).json({ error: "Missing id" });
+    }
+
     // Find a record
     try {
       if (findBakeryRecords.length) {
