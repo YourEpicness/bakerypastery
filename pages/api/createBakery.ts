@@ -1,21 +1,28 @@
-import { cleanData, db } from "../../lib/airtable";
+import { cleanData, Data, db } from "../../lib/airtable";
 import { NextApiRequest, NextApiResponse } from "next";
+import { Bakery } from "../../lib/bakeries";
 
-const createBakery = async (req: NextApiRequest, res: NextApiResponse) => {
-  const id = req.body.id;
-  // Error checking
+interface NextApiRequestWithBody extends NextApiRequest {
+  body: Data;
+}
+
+const createBakery = async (
+  req: NextApiRequestWithBody,
+  res: NextApiResponse
+) => {
+  const { id } = req.body;
+  //   Error checking
   if (!id) {
     return res.status(400).json({ error: "Missing id" });
   }
-
-  const findBakeryRecords = await db
-    .select({
-      filterByFormula: `id=${id}`,
-    })
-    .firstPage();
-
   if (req.method === "POST") {
-    const { id, name, address, neighborhood, votes, imgUrl } = req.body;
+    const { name, address, neighborhood, votes, imgUrl } = req.body;
+
+    const findBakeryRecords = await db
+      .select({
+        filterByFormula: `id="${id}"`,
+      })
+      .firstPage();
     // error checking
     if (!id || !name) {
       return res.status(400).json({ error: "Missing id or name" });
@@ -45,6 +52,12 @@ const createBakery = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (req.method === "GET") {
+    const { id } = req.body;
+    const findBakeryRecords = await db
+      .select({
+        filterByFormula: `id="${id}"`,
+      })
+      .firstPage();
     // Find a record
     try {
       if (findBakeryRecords.length) {

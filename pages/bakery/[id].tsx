@@ -49,25 +49,51 @@ const Bakery: NextPage<{ bakery: Bakery }> = (initialProps) => {
     state: { bakeries },
   } = useContext(StoreContext);
 
-  console.log("store", bakeries);
+  let nb: string;
+  const handleCreateBakery = async (bakeryData: Bakery) => {
+    const { id, name, address, neighborhood, votes, imgUrl } = bakeryData;
+    if (typeof neighborhood === "object") {
+      nb = neighborhood[0];
+    }
+    const data = {
+      id: id || 1,
+      name,
+      address: address || "",
+      neighborhood: nb || "",
+      votes: votes || 0,
+      imgUrl,
+    };
+    const response = await fetch("/api/createBakery", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const dbBakery = await response.json();
+  };
+
   useEffect(() => {
     if (isEmpty(initialProps.bakery)) {
       if (bakeries.length) {
-        const findBakeryById = bakeries.find((bakery: Bakery) => {
+        const bakeryFromContext = bakeries.find((bakery: Bakery) => {
           return bakery.id.toString() === id;
         });
-        setBakery(findBakeryById);
+        if (bakeryFromContext) {
+          console.log("Context", bakeryFromContext);
+          setBakery(bakeryFromContext);
+          handleCreateBakery(bakeryFromContext);
+        }
       }
     }
-  }, [id, initialProps, initialProps.bakery]);
+  }, [id]);
 
   if (router.isFallback) {
     return <div className="">Loading...</div>;
   }
 
-  const { imgUrl, address, neighborhood, name } = bakery;
-
-  console.log("bakery", bakery);
+  const { imgUrl, address, neighborhood, name, votes } = bakery;
   return (
     <div>
       <Head>
@@ -92,11 +118,12 @@ const Bakery: NextPage<{ bakery: Bakery }> = (initialProps) => {
             alt={name}
           />
         </div>
-        <div className="glass mt-[4rem] h-2/5 p-5">
+        <div className="glass mt-[4rem] h-1/2 p-5">
           <p className="text-xl font-semibold">{address}</p>
           {neighborhood && (
             <p className="font-semibold text-xl">{neighborhood}</p>
           )}
+          <p className="font-semibold text-xl">Votes: {votes}</p>
           <button className="mt-10 bg-blue-600 p-2 text-white font-bold rounded-md">
             Up vote!
           </button>

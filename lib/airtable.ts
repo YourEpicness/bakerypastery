@@ -1,7 +1,7 @@
 import Airtable, { Base, Record, Table } from "airtable";
 
 type Bakery = {
-  id: number;
+  id: string;
   name: string;
   address: string;
   neighborhood: string;
@@ -9,7 +9,16 @@ type Bakery = {
   votes: number;
 };
 
-export let db: Table<Bakery>;
+export type Data = {
+  address: string;
+  id: string;
+  imgUrl: string;
+  name: string;
+  neighborhood: string;
+  votes?: number;
+};
+
+export let db: Table<Data>;
 
 Airtable.configure({
   endpointUrl: "https://api.airtable.com",

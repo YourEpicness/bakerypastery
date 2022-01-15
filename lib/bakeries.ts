@@ -27,15 +27,16 @@ const getBakeryPhotos = async () => {
 
 export interface Bakery {
   address: string;
-  id: number;
+  id: string;
   imgUrl: string;
   name: string;
-  neighborhood: string;
+  neighborhood: string | string[];
+  votes?: number;
 }
 
 export interface Venue {
   address: string;
-  fsq_id: number;
+  fsq_id: string;
   imgUrl: string;
   name: string;
   neighborhood: string;
