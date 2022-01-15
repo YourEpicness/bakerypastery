@@ -86,8 +86,11 @@ const Bakery: NextPage<{ bakery: Bakery }> = (initialProps) => {
           handleCreateBakery(bakeryFromContext);
         }
       }
+    } else {
+      // SSG
+      handleCreateBakery(initialProps.bakery);
     }
-  }, [id]);
+  }, [id, initialProps, initialProps.bakery]);
 
   if (router.isFallback) {
     return <div className="">Loading...</div>;
