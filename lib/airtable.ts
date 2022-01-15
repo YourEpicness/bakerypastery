@@ -35,3 +35,11 @@ export const cleanData = (dbFunction: any) => {
     .map((record: any) => record.fields)
     .filter((record: any) => record.name);
 };
+
+// export const findBakeryRecords = async (id: string) => {
+//   return await db
+//     .select({
+//       filterByFormula: `id="${id}"`,
+//     })
+//     .firstPage();
+// };

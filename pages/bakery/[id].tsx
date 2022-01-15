@@ -45,6 +45,14 @@ const Bakery: NextPage<{ bakery: Bakery }> = (initialProps) => {
 
   const [bakery, setBakery]: [Bakery, any] = useState(initialProps.bakery);
 
+  const [votingCount, setVotingCount] = useState(0);
+
+  const handleUpvoteButton = () => {
+    console.log("handle upvote");
+    let count = votingCount + 1;
+    setVotingCount(count);
+  };
+
   const {
     state: { bakeries },
   } = useContext(StoreContext);
@@ -96,7 +104,7 @@ const Bakery: NextPage<{ bakery: Bakery }> = (initialProps) => {
     return <div className="">Loading...</div>;
   }
 
-  const { imgUrl, address, neighborhood, name, votes } = bakery;
+  const { imgUrl, address, neighborhood, name } = bakery;
   return (
     <div>
       <Head>
@@ -126,7 +134,7 @@ const Bakery: NextPage<{ bakery: Bakery }> = (initialProps) => {
           {neighborhood && (
             <p className="font-semibold text-xl">{neighborhood}</p>
           )}
-          <p className="font-semibold text-xl">Votes: {votes}</p>
+          <p className="font-semibold text-xl">Votes: {votingCount}</p>
           <button className="mt-10 bg-blue-600 p-2 text-white font-bold rounded-md">
             Up vote!
           </button>

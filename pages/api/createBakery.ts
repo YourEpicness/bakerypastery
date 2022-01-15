@@ -1,6 +1,5 @@
 import { cleanData, Data, db } from "../../lib/airtable";
 import { NextApiRequest, NextApiResponse } from "next";
-import { Bakery } from "../../lib/bakeries";
 
 interface NextApiRequestWithBody extends NextApiRequest {
   body: Data;
