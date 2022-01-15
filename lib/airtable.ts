@@ -1,4 +1,4 @@
-import Airtable, { Base, Record, Table } from "airtable";
+import Airtable, { Base, FieldSet, Record, Records, Table } from "airtable";
 
 type Bakery = {
   id: string;
@@ -18,7 +18,7 @@ export type Data = {
   votes?: number;
 };
 
-export let db: Table<Data>;
+let db: Table<Data>;
 
 Airtable.configure({
   endpointUrl: "https://api.airtable.com",
@@ -30,16 +30,21 @@ if (process.env.NEXT_PUBLIC_AIRTABLE_BASE_KEY) {
   db = base("bakeries");
 }
 
-export const cleanData = (dbFunction: any) => {
+const cleanData = <T extends FieldSet>(dbFunction: Records<T>): T[] => {
   return dbFunction
-    .map((record: any) => record.fields)
-    .filter((record: any) => record.name);
+    .map((record: Record<T>) => record.fields)
+    .filter((record) => record.name);
 };
 
-// export const findBakeryRecords = async (id: string) => {
-//   return await db
-//     .select({
-//       filterByFormula: `id="${id}"`,
-//     })
-//     .firstPage();
-// };
+const findFilteredRecords = async (id: string): Promise<Data[]> => {
+  const findBakeryRecords = await db
+    .select({
+      filterByFormula: `id="${id}"`,
+    })
+    .firstPage();
+
+  // Find a record
+  return cleanData(findBakeryRecords);
+};
+
+export { db, cleanData, findFilteredRecords };

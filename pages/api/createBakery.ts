@@ -1,4 +1,4 @@
-import { cleanData, Data, db } from "../../lib/airtable";
+import { cleanData, db, Data, findFilteredRecords } from "../../lib/airtable";
 import { NextApiRequest, NextApiResponse } from "next";
 
 interface NextApiRequestWithBody extends NextApiRequest {
@@ -52,23 +52,18 @@ const createBakery = async (
 
   if (req.method === "GET") {
     const { id } = req.body;
-    const findBakeryRecords = await db
-      .select({
-        filterByFormula: `id="${id}"`,
-      })
-      .firstPage();
     // Find a record
     try {
-      if (findBakeryRecords.length) {
-        const records = cleanData(findBakeryRecords);
-        return res.json(records);
+      const records = await findFilteredRecords(id);
+      // error checking
+      if (!records) {
+        return res.status(404).json({ error: "Bakery not found" });
       }
+      res.json(records);
     } catch (err) {
       console.error("Error finding store", err);
-      return res.status(500).json({ message: "Error finding store", err });
+      res.status(500).json({ message: "Error finding store", err });
     }
-
-    return res.status(404).json({ error: "Bakery not found" });
   }
 };
 
