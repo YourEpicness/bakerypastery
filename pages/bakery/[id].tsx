@@ -69,10 +69,22 @@ const Bakery: NextPage<{ bakery: Bakery }> = (initialProps) => {
   }
 
   useEffect(() => {
-    if (data && data.length) {
-      setBakery(data[0]);
-      setVotingCount(data[0].votes as number);
+    if (!isEmpty(initialProps.bakery)) {
+      handleCreateBakery(initialProps.bakery);
     }
+    const bakeryFromContext = bakeries.find((bakery: Bakery) => {
+      return bakery.id.toString() === id;
+    });
+    if (bakeryFromContext) {
+      console.log("Context", bakeryFromContext);
+      setBakery(bakeryFromContext);
+      handleCreateBakery(bakeryFromContext);
+    }
+  }, [id, initialProps, initialProps.bakery]);
+
+  useEffect(() => {
+    setBakery(data![0]);
+    setVotingCount(data![0].votes as number);
   }, [data]);
 
   const handleUpvoteButton = async () => {
@@ -115,24 +127,6 @@ const Bakery: NextPage<{ bakery: Bakery }> = (initialProps) => {
 
     const dbBakery = await response.json();
   };
-
-  useEffect(() => {
-    if (isEmpty(initialProps.bakery)) {
-      if (bakeries.length) {
-        const bakeryFromContext = bakeries.find((bakery: Bakery) => {
-          return bakery.id.toString() === id;
-        });
-        if (bakeryFromContext) {
-          console.log("Context", bakeryFromContext);
-          setBakery(bakeryFromContext);
-          handleCreateBakery(bakeryFromContext);
-        }
-      }
-    } else {
-      // SSG
-      handleCreateBakery(initialProps.bakery);
-    }
-  }, [id, initialProps, initialProps.bakery]);
 
   if (router.isFallback) {
     return <div className="">Loading...</div>;

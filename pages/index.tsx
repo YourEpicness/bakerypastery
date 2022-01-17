@@ -75,7 +75,12 @@ const Home: NextPage<{ bakeryData: Bakery[] }> = ({ bakeryData }) => {
         {locationErrorMsg && <p>? Something went wrong: {locationErrorMsg} </p>}
         {bakeriesError && <p>? Something went wrong: {bakeriesError} </p>}
         <div className="absolute top-0 right-1/4 md:top-0 md:right-1/8">
-          <Image src="/static/baker.png" width={400} height={400} />
+          <Image
+            src="/static/baker.png"
+            alt="Baker Illustration"
+            width={400}
+            height={400}
+          />
         </div>
       </main>
       {bakeries.length > 0 && (

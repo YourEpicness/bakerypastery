@@ -9,7 +9,7 @@ const Card: NextPage<{
 }> = ({ href, name, imgUrl }) => {
   return (
     <div className="my-10 glass">
-      <Link href={href}>
+      <Link href={href} passHref>
         <div className="p-5 hover:bg-purple-400 cursor-pointer">
           <a className="">
             <div className="mb-2">
@@ -21,6 +21,7 @@ const Card: NextPage<{
                 src={imgUrl}
                 width={260}
                 height={160}
+                alt="Bakery"
               />
             </div>
           </a>
