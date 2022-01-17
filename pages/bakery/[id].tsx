@@ -41,39 +41,55 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 const Bakery: NextPage<{ bakery: Bakery }> = (initialProps) => {
+  const {
+    state: { bakeries },
+  } = useContext(StoreContext);
+
   const router = useRouter();
   const id = router.query.id;
 
   const [bakery, setBakery]: [Bakery, any] = useState(initialProps.bakery);
 
   const [votingCount, setVotingCount] = useState(0);
+  const url = `/api/getBakeryById?id=${id}`;
 
-  const { data, error } = useSWR<Bakery[]>(`/api/getBakeryById?${id}`);
-
-  useEffect(() => {
-    if (data && data.length) {
-      console.log("data from SWR", data);
-      setBakery(data[0]);
-
-      setVotingCount(data[0].votes as number);
-    }
-  }, [data]);
-
-  const handleUpvoteButton = () => {
-    console.log("handle upvote");
-    let count = votingCount + 1;
-    setVotingCount(count);
+  const fetcher = async () => {
+    const res = await fetch(url);
+    const data = await res.json();
+    return data;
   };
 
+  const { data, error } = useSWR<Bakery[]>(url, fetcher);
+
   if (error) {
+    console.log(error);
     return (
       <div className="">Something went wrong retrieving the bakery page</div>
     );
   }
 
-  const {
-    state: { bakeries },
-  } = useContext(StoreContext);
+  useEffect(() => {
+    if (data && data.length) {
+      setBakery(data[0]);
+      setVotingCount(data[0].votes as number);
+    }
+  }, [data]);
+
+  const handleUpvoteButton = async () => {
+    const response = await fetch("/api/favoriteBakeryById", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+      }),
+    });
+
+    const votesData = await response.json();
+    let count = votingCount + 1;
+    setVotingCount(count);
+  };
 
   let nb: string;
   const handleCreateBakery = async (bakeryData: Bakery) => {

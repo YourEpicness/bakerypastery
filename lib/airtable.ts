@@ -10,6 +10,7 @@ type Bakery = {
 };
 
 export type Data = {
+  recordId: string;
   address: string;
   id: string;
   imgUrl: string;
@@ -30,10 +31,15 @@ if (process.env.NEXT_PUBLIC_AIRTABLE_BASE_KEY) {
   db = base("bakeries");
 }
 
-const cleanData = <T extends FieldSet>(dbFunction: Records<T>): T[] => {
+const cleanData = <T extends FieldSet>(dbFunction: Records<T>) => {
   return dbFunction
-    .map((record: Record<T>) => record.fields)
-    .filter((record) => record.name);
+    .map((record: Record<T>) => {
+      return {
+        recordId: record.id,
+        ...record.fields,
+      };
+    })
+    .filter((record) => record.recordId);
 };
 
 const findFilteredRecords = async (id: string): Promise<Data[]> => {
