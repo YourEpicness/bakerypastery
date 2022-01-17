@@ -23,11 +23,11 @@ let db: Table<Data>;
 
 Airtable.configure({
   endpointUrl: "https://api.airtable.com",
-  apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY,
+  apiKey: process.env.AIRTABLE_API_KEY,
 });
 
-if (process.env.NEXT_PUBLIC_AIRTABLE_BASE_KEY) {
-  const base = Airtable.base(process.env.NEXT_PUBLIC_AIRTABLE_BASE_KEY);
+if (process.env.AIRTABLE_BASE_KEY) {
+  const base = Airtable.base(process.env.AIRTABLE_BASE_KEY);
   db = base("bakeries");
 }
 
