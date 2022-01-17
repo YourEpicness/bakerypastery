@@ -8,6 +8,7 @@ import { Bakery, fetchBakeries } from "../../lib/bakeries";
 import { StoreContext } from "../../store/store-context";
 import { useContext, useEffect, useState } from "react";
 import { isEmpty } from "../../utils";
+import useSWR from "swr";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context;
@@ -47,11 +48,28 @@ const Bakery: NextPage<{ bakery: Bakery }> = (initialProps) => {
 
   const [votingCount, setVotingCount] = useState(0);
 
+  const { data, error } = useSWR<Bakery[]>(`/api/getBakeryById?${id}`);
+
+  useEffect(() => {
+    if (data && data.length) {
+      console.log("data from SWR", data);
+      setBakery(data[0]);
+
+      setVotingCount(data[0].votes as number);
+    }
+  }, [data]);
+
   const handleUpvoteButton = () => {
     console.log("handle upvote");
     let count = votingCount + 1;
     setVotingCount(count);
   };
+
+  if (error) {
+    return (
+      <div className="">Something went wrong retrieving the bakery page</div>
+    );
+  }
 
   const {
     state: { bakeries },
@@ -135,7 +153,10 @@ const Bakery: NextPage<{ bakery: Bakery }> = (initialProps) => {
             <p className="font-semibold text-xl">{neighborhood}</p>
           )}
           <p className="font-semibold text-xl">Votes: {votingCount}</p>
-          <button className="mt-10 bg-blue-600 p-2 text-white font-bold rounded-md">
+          <button
+            onClick={handleUpvoteButton}
+            className="mt-10 bg-blue-600 p-2 text-white font-bold rounded-md"
+          >
             Up vote!
           </button>
         </div>
