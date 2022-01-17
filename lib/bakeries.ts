@@ -2,7 +2,7 @@
 import { createApi } from "unsplash-js";
 
 const unsplashApi = createApi({
-  accessKey: process.env.UNSPLASH_API_KEY,
+  accessKey: process.env.NEXT_PUBLIC_UNSPLASH_API_KEY,
 });
 
 const getUrlForCoffeeStores = (
@@ -63,7 +63,7 @@ export const fetchBakeries = async (
     method: "GET",
     headers: {
       Accept: "application/json",
-      Authorization: process.env.FSQ_API_KEY,
+      Authorization: process.env.NEXT_PUBLIC_FSQ_API_KEY,
     },
   };
 
